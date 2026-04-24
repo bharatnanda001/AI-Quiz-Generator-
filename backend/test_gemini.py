@@ -1,0 +1,18 @@
+import os
+from google import genai
+from dotenv import load_dotenv
+
+load_dotenv()
+api_key = os.getenv("GEMINI_API_KEY")
+print(f"Using API Key: {api_key[:10]}...")
+
+client = genai.Client(api_key=api_key)
+
+try:
+    response = client.models.generate_content(
+        model='models/gemini-2.0-flash',
+        contents="Say hello in JSON format: {'msg': 'hello'}",
+    )
+    print("Response text:", response.text)
+except Exception as e:
+    print("Error:", e)

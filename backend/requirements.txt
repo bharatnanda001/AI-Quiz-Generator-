@@ -1,0 +1,15 @@
+fastapi
+uvicorn
+pydantic
+pydantic-settings
+python-multipart
+python-pptx
+pymupdf
+pytesseract
+pillow
+keybert
+fpdf2
+python-docx
+python-dotenv
+uuid
+openai>=1.0.0
