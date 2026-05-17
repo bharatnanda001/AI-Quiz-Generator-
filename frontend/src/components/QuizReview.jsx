@@ -2,7 +2,7 @@ import React from 'react';
 import { DownloadCloud, Edit3, Trash2, RefreshCw } from 'lucide-react';
 import axios from 'axios';
 
-const API_BASE = 'http://localhost:8000/api/v1';
+const API_BASE = 'http://localhost:8001/api/v1';
 
 export default function QuizReview({ quizData, documentId }) {
   const handleExport = async (format) => {

@@ -29,7 +29,7 @@ def generate_quiz_payload(text_context: str, keywords: List[str], num_questions:
     if not client:
         return []
 
-    model_name = "gemini-2.0-flash"
+    model_name = "gemini-2.5-flash"
     
     prompt = f"""
     You are an AI Quiz Generator. Based on the following presentation slide text and keywords, generate exactly {num_questions} quiz questions.
