@@ -15,6 +15,12 @@ SCOPES = [
 DISCOVERY_DOC = "https://forms.googleapis.com/$discovery/rest?version=v1"
 
 def get_credentials():
+    # Write token.json from env variable in headless production environments
+    env_token = os.getenv("GOOGLE_TOKEN_JSON")
+    if env_token and not os.path.exists("token.json"):
+        with open("token.json", "w") as token_file:
+            token_file.write(env_token)
+
     creds = None
     if os.path.exists("token.json"):
         creds = Credentials.from_authorized_user_file("token.json", SCOPES)

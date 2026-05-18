@@ -2,7 +2,9 @@ import React, { useState } from 'react';
 import { UploadCloud, CheckCircle2, Loader2, Sparkles, GraduationCap, Presentation } from 'lucide-react';
 import axios from 'axios';
 
-const API_BASE = 'http://localhost:8001/api/v1';
+const API_BASE = import.meta.env.VITE_API_URL 
+  ? `${import.meta.env.VITE_API_URL}/api/v1` 
+  : 'http://localhost:8001/api/v1';
 
 export default function UploadDashboard({ onDocumentUploaded, documentId, onQuizGenerated, role, setRole }) {
   const [isUploading, setIsUploading] = useState(false);
