@@ -1,6 +1,3 @@
-import re
-
-
 def validate_question(question: dict, context_text: str) -> bool:
     """
     Validates the generated question using heuristics.

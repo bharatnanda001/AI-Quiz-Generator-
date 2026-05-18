@@ -6,6 +6,7 @@ import { BookOpen } from 'lucide-react';
 export default function App() {
   const [currentDocumentId, setCurrentDocumentId] = useState(null);
   const [quizData, setQuizData] = useState(null);
+  const [role, setRole] = useState('Student');
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -32,11 +33,14 @@ export default function App() {
             onDocumentUploaded={setCurrentDocumentId} 
             documentId={currentDocumentId}
             onQuizGenerated={setQuizData}
+            role={role}
+            setRole={setRole}
           />
         ) : (
           <QuizReview 
             quizData={quizData} 
             documentId={currentDocumentId} 
+            role={role}
           />
         )}
       </main>

@@ -1,11 +1,11 @@
-from fastapi import APIRouter, UploadFile, File, BackgroundTasks, HTTPException
+from fastapi import APIRouter, UploadFile, File, HTTPException
 from fastapi.responses import FileResponse
 from app.models.schemas import DocumentResponse, GenerateQuizRequest, QuizResponse, QuizQuestion
 from app.services.parser import extract_text
 from app.services.nlp import extract_keywords
 from app.services.generator import generate_quiz_payload
 from app.services.exporter import export_docx, export_pdf
-from typing import List
+from app.services.google_forms import export_quiz_to_form
 import uuid
 import os
 import shutil
@@ -80,7 +80,7 @@ async def generate_quiz(req: GenerateQuizRequest):
     return QuizResponse(questions=valid_questions)
 
 @router.post("/export/docx")
-async def export_quiz_docx(document_id: str):
+async def export_quiz_docx(document_id: str, role: str = "Teacher"):
     quiz_path = os.path.join(DB_DIR, f"{document_id}_quiz.json")
     if not os.path.exists(quiz_path):
         raise HTTPException(status_code=404, detail="Generated quiz not found")
@@ -90,12 +90,12 @@ async def export_quiz_docx(document_id: str):
     
     questions = [QuizQuestion(**q) for q in data]
     out_path = os.path.join(DB_DIR, f"{document_id}_export.docx")
-    export_docx(questions, out_path)
+    export_docx(questions, out_path, role)
     
     return FileResponse(out_path, filename="Generated_Quiz.docx")
 
 @router.post("/export/pdf")
-async def export_quiz_pdf(document_id: str):
+async def export_quiz_pdf(document_id: str, role: str = "Teacher"):
     quiz_path = os.path.join(DB_DIR, f"{document_id}_quiz.json")
     if not os.path.exists(quiz_path):
         raise HTTPException(status_code=404, detail="Generated quiz not found")
@@ -105,6 +105,23 @@ async def export_quiz_pdf(document_id: str):
     
     questions = [QuizQuestion(**q) for q in data]
     out_path = os.path.join(DB_DIR, f"{document_id}_export.pdf")
-    export_pdf(questions, out_path)
+    export_pdf(questions, out_path, role)
     
     return FileResponse(out_path, filename="Generated_Quiz.pdf")
+
+@router.post("/export/google-forms")
+async def export_quiz_google_form(document_id: str):
+    quiz_path = os.path.join(DB_DIR, f"{document_id}_quiz.json")
+    if not os.path.exists(quiz_path):
+        raise HTTPException(status_code=404, detail="Generated quiz not found")
+        
+    with open(quiz_path, "r", encoding="utf-8") as f:
+        data = json.load(f)
+    
+    try:
+        result = export_quiz_to_form("AI Generated Quiz", data)
+        return result
+    except Exception as e:
+        if isinstance(e, FileNotFoundError):
+            raise HTTPException(status_code=400, detail=str(e))
+        raise HTTPException(status_code=500, detail=f"Failed to create Google Form: {e}")

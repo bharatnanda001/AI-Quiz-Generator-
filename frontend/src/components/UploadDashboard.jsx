@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { UploadCloud, CheckCircle2, Loader2, Sparkles } from 'lucide-react';
+import { UploadCloud, CheckCircle2, Loader2, Sparkles, GraduationCap, Presentation } from 'lucide-react';
 import axios from 'axios';
 
 const API_BASE = 'http://localhost:8001/api/v1';
 
-export default function UploadDashboard({ onDocumentUploaded, documentId, onQuizGenerated }) {
+export default function UploadDashboard({ onDocumentUploaded, documentId, onQuizGenerated, role, setRole }) {
   const [isUploading, setIsUploading] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
   const [config, setConfig] = useState({
@@ -96,6 +96,47 @@ export default function UploadDashboard({ onDocumentUploaded, documentId, onQuiz
 
       <div className={`card space-y-6 transition-opacity ${!documentId ? 'opacity-50 pointer-events-none' : 'opacity-100'}`}>
         <h3 className="text-xl font-bold border-b pb-4">Quiz Settings</h3>
+
+        <div className="space-y-4">
+          <label className="font-semibold block text-base text-txt">Select Your Role</label>
+          <div className="grid grid-cols-2 gap-4">
+            {/* Student Card */}
+            <button
+              type="button"
+              onClick={() => setRole('Student')}
+              className={`flex flex-col items-center justify-center p-5 rounded-2xl border-2 transition-all relative overflow-hidden group ${
+                role === 'Student'
+                  ? 'border-primary bg-primary-fixed/20 shadow-md scale-[1.01]'
+                  : 'border-surface-container bg-white/40 hover:border-primary/50 hover:bg-white/60'
+              }`}
+            >
+              <div className={`p-3 rounded-full mb-2 ${role === 'Student' ? 'bg-primary text-white scale-110' : 'bg-surface-low text-txt-variant group-hover:scale-105'} transition-all`}>
+                <GraduationCap className="w-6 h-6" />
+              </div>
+              <span className={`font-bold ${role === 'Student' ? 'text-primary' : 'text-txt-variant'}`}>Student</span>
+              <span className="text-xs text-txt-variant mt-1 text-center max-w-[180px]">Test your knowledge with practice questions.</span>
+            </button>
+
+            {/* Teacher Card */}
+            <button
+              type="button"
+              onClick={() => setRole('Teacher')}
+              className={`flex flex-col items-center justify-center p-5 rounded-2xl border-2 transition-all relative overflow-hidden group ${
+                role === 'Teacher'
+                  ? 'border-primary bg-primary-fixed/20 shadow-md scale-[1.01]'
+                  : 'border-surface-container bg-white/40 hover:border-primary/50 hover:bg-white/60'
+              }`}
+            >
+              <div className={`p-3 rounded-full mb-2 ${role === 'Teacher' ? 'bg-primary text-white scale-110' : 'bg-surface-low text-txt-variant group-hover:scale-105'} transition-all`}>
+                <Presentation className="w-6 h-6" />
+              </div>
+              <span className={`font-bold ${role === 'Teacher' ? 'text-primary' : 'text-txt-variant'}`}>Teacher</span>
+              <span className="text-xs text-txt-variant mt-1 text-center max-w-[180px]">Generate question sheets & separate answer keys.</span>
+            </button>
+          </div>
+        </div>
+
+        <div className="border-t border-dashed border-surface-dim my-6"></div>
         
         <div className="grid grid-cols-2 gap-8">
           <div className="space-y-3">

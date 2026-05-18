@@ -13,3 +13,6 @@ python-docx
 python-dotenv
 uuid
 openai>=1.0.0
+google-api-python-client
+google-auth-httplib2
+google-auth-oauthlib
